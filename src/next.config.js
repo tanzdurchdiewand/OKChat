@@ -4,6 +4,20 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["@azure/storage-blob"],
   },
+  
+    reactStrictMode: true,
+    swcMinify: true,
+  
+    webpack: (config, { isServer }) => {
+      if (!isServer) {
+        config.resolve.fallback = {
+          tedious: false,
+        };
+      }
+  
+      return config;
+    },
+    
 };
 
 module.exports = nextConfig;
