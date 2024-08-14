@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "tedious": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/tedious": "^4.0.14"
+  }
+}
