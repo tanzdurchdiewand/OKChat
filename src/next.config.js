@@ -4,20 +4,19 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["@azure/storage-blob"],
   },
+  reactStrictMode: true,
+  swcMinify: true,
   
-    reactStrictMode: true,
-    swcMinify: true,
-  
-    webpack: (config, { isServer }) => {
-      if (!isServer) {
-        config.resolve.fallback = {
-          tedious: false,
-        };
-      }
-  
-      return config;
-    },
-    
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,  // Preserve existing fallbacks
+        tedious: false,  // Exclude `tedious` from client-side
+      };
+    }
+
+    return config;
+  },
 };
 
 module.exports = nextConfig;
