@@ -1,5 +1,5 @@
+import axios from "axios";
 import { OpenAIInstance } from "../../../common/services/openai";
-import axios, { AxiosResponse } from "axios";
 
 interface AIQuery {
   summary: string;
@@ -58,7 +58,7 @@ export const executeCreateDAXQuery = async (
   const { summary, query } = extractAIQuery(response);
   console.log("🟢 Generated SQL query:", query, summary);
 
-  let sqlresponse: AxiosResponse;
+  let sqlresponse: any;
   const sqlquery = {
     queries: [
       {

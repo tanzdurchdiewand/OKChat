@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 export async function executeDataAPICall(
   req: any,
@@ -13,7 +13,7 @@ export async function executeDataAPICall(
     return "No prompt provided";
   }
 
-  let response: AxiosResponse;
+  let response: any;
 
   try {
     response = await axios.get(
