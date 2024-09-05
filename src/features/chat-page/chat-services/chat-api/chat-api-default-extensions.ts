@@ -7,11 +7,14 @@ import { uniqueId } from "@/features/common/util";
 import { GetImageUrl, UploadImageToStore } from "../chat-image-service";
 import { ChatThreadModel } from "../models";
 import { executeCreateSQLQuery } from "./sqlExtensions";
+import { executeDataAPICall } from "./executeDataAPICall";
+import { executeCreateDAXQuery } from "./dax-Abfrage";
 
 export const GetDefaultExtensions = async (props: {
   chatThread: ChatThreadModel;
   userMessage: string;
   signal: AbortSignal;
+  req: any;
 }): Promise<ServerActionResponse<Array<any>>> => {
   const defaultExtensions: Array<any> = [];
 
@@ -58,10 +61,56 @@ export const GetDefaultExtensions = async (props: {
         },
       },
       description:
-        "Use this tool if the user asks for Company Data or database-related tasks. Do not use this tool with an SQL statement. You can ask the create_sql_query tool in natural language. This tool generates an SQL query from a text input and executes it.",
+        "Use this tool whenever the user asks for company data or any database-related tasks. Avoid using this tool with a predefined SQL statement. Instead, ask the create_sql_query tool in natural language, and it will generate and execute the appropriate SQL query based on the user's input.",
       name: "create_sql_query",
     },
   });
+
+  // defaultExtensions.push({
+  //   type: "function",
+  //   function: {
+  //     function: async (args: any) =>
+  //       await executeDataAPICall(
+  //         args,
+  //         props.chatThread.id,
+  //         props.userMessage,
+  //         props.signal
+  //       ),
+  //     parse: (input: string) => JSON.parse(input),
+  //     parameters: {
+  //       type: "object",
+  //       properties: {
+  //         prompt: { type: "string" },
+  //       },
+  //     },
+  //     description:
+  //       "You must only use this tool if the user asks about employee Data. You must only use this tool once per message.",
+  //     name: "fetch_data",
+  //   },
+  // });
+
+  // defaultExtensions.push({
+  //   type: "function",
+  //   function: {
+  //     function: async (args: any) =>
+  //       await executeCreateDAXQuery(
+  //         args,
+  //         props.chatThread.id,
+  //         props.userMessage,
+  //         props.signal
+  //       ),
+  //     parse: (input: string) => JSON.parse(input),
+  //     parameters: {
+  //       type: "object",
+  //       properties: {
+  //         prompt: { type: "string" },
+  //       },
+  //     },
+  //     description:
+  //       "You must only use this tool if the user asks about employee Data. You must only use this tool once per message. Use this tool only with natural language input.",
+  //     name: "create_dax_query",
+  //   },
+  // });
 
   return {
     status: "OK",

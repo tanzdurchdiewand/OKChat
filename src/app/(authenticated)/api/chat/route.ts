@@ -11,5 +11,5 @@ export async function POST(req: Request) {
     multimodalImage,
   };
 
-  return await ChatAPIEntry(userPrompt, req.signal);
+  return await ChatAPIEntry(userPrompt, req.signal, req);
 }

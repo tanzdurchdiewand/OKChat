@@ -1,6 +1,4 @@
 import { ServerActionResponse } from "@/features/common/server-action-response";
-import { AzureKeyCredential } from "@azure/core-auth";
-// import { OpenAIClient, ChatRequestSystemMessage } from "@azure/openai";
 import { Connection, Request } from "tedious";
 import { OpenAIInstance } from "../../../common/services/openai";
 
@@ -146,6 +144,7 @@ export const executeCreateSQLQuery = async (
     ],
   });
   const { summary, query } = extractAIQuery(response);
+  console.log("🟢 Generated SQL query:", query, summary);
 
   try {
     if (query !== "NA") {

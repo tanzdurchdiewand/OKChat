@@ -1,3 +1,4 @@
+import { log } from "console";
 import { OpenAI } from "openai";
 
 export const OpenAIInstance = () => {
@@ -9,7 +10,6 @@ export const OpenAIInstance = () => {
   });
   return openai;
 };
-
 export const OpenAIEmbeddingInstance = () => {
   if (
     !process.env.AZURE_OPENAI_API_KEY ||

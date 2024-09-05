@@ -40,6 +40,7 @@ export interface UserPrompt {
   id: string; // thread id
   message: string;
   multimodalImage: string;
+  req: Request;
 }
 
 export interface ChatDocumentModel {

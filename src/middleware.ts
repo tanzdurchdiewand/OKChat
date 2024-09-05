@@ -7,25 +7,22 @@ const requireAuth: string[] = [
   "/reporting",
   "/unauthorized",
   "/persona",
-  "/prompt"
+  "/prompt",
 ];
 const requireAdmin: string[] = ["/reporting"];
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
   const pathname = request.nextUrl.pathname;
-
   if (requireAuth.some((path) => pathname.startsWith(path))) {
     const token = await getToken({
       req: request,
     });
-
     //check not logged in
     if (!token) {
       const url = new URL(`/`, request.url);
       return NextResponse.redirect(url);
     }
-
     if (requireAdmin.some((path) => pathname.startsWith(path))) {
       //check if not authorized
       if (!token.isAdmin) {
@@ -34,7 +31,6 @@ export async function middleware(request: NextRequest) {
       }
     }
   }
-
   return res;
 }
 

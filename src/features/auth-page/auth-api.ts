@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import { Provider } from "next-auth/providers/index";
 import { hashValue } from "./helpers";
+import { useSession } from "next-auth/react";
 
 const configureIdentityProvider = () => {
   const providers: Array<Provider> = [];
@@ -78,10 +79,7 @@ const configureIdentityProvider = () => {
             isAdmin: false,
             image: "",
           };
-          console.log(
-            "=== DEV USER LOGGED IN:\n",
-            JSON.stringify(user, null, 2)
-          );
+
           return user;
         },
       })
@@ -103,7 +101,7 @@ export const options: NextAuthOptions = {
     },
     async session({ session, token, user }) {
       session.user.isAdmin = token.isAdmin as boolean;
-      return session;
+      return { ...session, token: token };
     },
   },
   session: {

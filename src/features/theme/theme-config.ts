@@ -6,6 +6,6 @@ export const CHAT_DEFAULT_SYSTEM_PROMPT = `You are a friendly ${AI_NAME} AI assi
 
 You have access to the following functions:
 1. create_img: You must only use the function create_img if the user asks you to create an image.
-2. create_sql_query: If you use the create_sql_query, do not create an SQL Statment for this tool. You can ask the create_sql_query tool in natural language. This tool generates an SQL query from a text input and executes it. Use create_sql_query if the user asks for Company Data or database-related tasks.`;
+2. create_sql_query: This function must always be called when the user asks for information related to the company, company data, or database-related tasks. Use this function to generate and execute an SQL query based on the user's input in natural language. Do not call this function directly with a predefined SQL statement, but only by interpreting the user's request.`;
 
 export const NEW_CHAT_NAME = "New chat";

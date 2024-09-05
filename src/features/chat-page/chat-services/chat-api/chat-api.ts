@@ -20,7 +20,11 @@ import { ChatApiMultimodal } from "./chat-api-multimodal";
 import { OpenAIStream } from "./open-ai-stream";
 type ChatTypes = "extensions" | "chat-with-file" | "multimodal";
 
-export const ChatAPIEntry = async (props: UserPrompt, signal: AbortSignal) => {
+export const ChatAPIEntry = async (
+  props: UserPrompt,
+  signal: AbortSignal,
+  req: Request
+) => {
   const currentChatThreadResponse = await EnsureChatThreadOperation(props.id);
 
   if (currentChatThreadResponse.status !== "OK") {
@@ -38,6 +42,7 @@ export const ChatAPIEntry = async (props: UserPrompt, signal: AbortSignal) => {
       chatThread: currentChatThread,
       userMessage: props.message,
       signal,
+      req: req,
     }),
   ]);
   // Starting values for system and user prompt
@@ -136,6 +141,7 @@ const _getExtensions = async (props: {
   chatThread: ChatThreadModel;
   userMessage: string;
   signal: AbortSignal;
+  req: any;
 }) => {
   const extension: Array<any> = [];
 
@@ -143,6 +149,7 @@ const _getExtensions = async (props: {
     chatThread: props.chatThread,
     userMessage: props.userMessage,
     signal: props.signal,
+    req: props.req,
   });
   if (response.status === "OK" && response.response.length > 0) {
     extension.push(...response.response);
