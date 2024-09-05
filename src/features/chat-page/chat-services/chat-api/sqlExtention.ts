@@ -119,16 +119,37 @@ export const executeCreateSQLQuery = async (
 
   Include column name headers in the query results.
 
-  Always provide your answer in the JSON format below:
+  Follow these formatting rules strictly:
 
-  { "summary": "your-summary", "query":  "your-query" }
+  Important:
+  - Do not invent any information. If you do not have sufficient information to formulate a query, state so in the summary.
+  - If asking for specific data such as an email address which is not provided, replace "your-query" with NA in the JSON response and reply with a summary explaining the missing data instead of inventing it.
 
-  Output ONLY JSON.
-  In the preceding JSON response, substitute "your-query" with Microsoft SQL Server Query to retrieve the requested data.
-  In the preceding JSON response, substitute "your-summary" with a summary of the query.
-  Always include all columns in the table.
-  If the resulting query is non-executable, replace "your-query" with NA, but still substitute "your-query" with a summary of the query.
-  Do not use MySQL syntax.`;
+  1. Always match the table and column names exactly as they appear in the schema.
+  2. Do not use any table or column names that are not listed in the schema.
+  3. Include all columns in the specified table(s) in your queries.
+  4. If the resulting query is non-executable, replace "your-query" with NA in the JSON response.
+  5. Always provide your answer in the JSON format below:
+
+  {
+    "summary": "your-summary",
+    "query": "your-query"
+  }
+
+  In the preceding JSON response:
+  - Substitute "your-query" with a Microsoft SQL Server Query to retrieve the requested data.
+  - Substitute "your-summary" with a summary of the query.
+  - Do not use MySQL syntax.
+  - Output ONLY in JSON format.
+
+  For example, to return all entries from dbo.Employee, the response should be:
+
+  {
+    "summary": "Retrieve all columns from dbo.Employee",
+    "query": "SELECT Abbreviation, AvatarUrl, BusinessCardDescription, BusinessUnitId, CareerLevelId, ConsultingLevel, CreatedOn, Email, EntranceDatePermanentEmployee, EntranceDateTrainee, FirstName, FullTimeEquivalent, Id, IsActive, IsExternal, IsZeitAdmin, LastName, Location, LocationId, MentorId, ModifiedOn, MSAADObjectId, Name, OrganizationUnit, RefId, Salutation, Type, TypeId, Upn, WorkingDaysPerWeek, WorkingHoursPerDay FROM dbo.Employee"
+  }
+
+  Ensure all SQL strings and JSON strings are properly escaped.`;
 
   const response = await openAI.chat.completions.create({
     model: "gpt-4o",
@@ -143,12 +164,14 @@ export const executeCreateSQLQuery = async (
       },
     ],
   });
+  console.log("🟢 Response from AI:", response.choices[0].message.content);
   const { summary, query } = extractAIQuery(response);
   console.log("🟢 Generated SQL query:", query, summary);
 
   try {
     if (query !== "NA") {
       const result = await getDataTable(query);
+      console.log("🟢 SQL query result:", result);
       return {
         status: "OK",
         response: result,
@@ -177,7 +200,7 @@ export function extractAIQuery(chatCompletionsResponse: any): {
     .replace("```json", "")
     .replace("```", "")
     .replace("\\", "");
-
+  console.log("🟢 Cleaned content:", cleanedContent);
   // Deserialisiere das JSON zu einem AIQuery-Objekt
   const response: AIQuery = JSON.parse(cleanedContent);
 
